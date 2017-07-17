@@ -6,12 +6,13 @@ var keys = require('./keys.js');
 var Twitter = require('twitter');
 var client = new Twitter(keys.twitterKeys);
 
+
 var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotifyKeys);
 
 var params = {
     screen_name: 'Getpetpal',
-    count: 20
+    count: 10
 }
 
 var request = require('request');
@@ -37,25 +38,10 @@ switch (action) {
 //EDIT
 function myTweets() {
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
-        if (!error && response.statusCode == 200) {
-            fs.appendFile('terminal.log', ('=============== LOG ENTRY BEGIN ===============\r\n' + Date() + '\r\n \r\nTERMINAL COMMANDS:\r\n$: ' + process.argv + '\r\n \r\nDATA OUTPUT:\r\n'), function(err) {
-                if (err) throw err;
-            });
-            console.log(' ');
-            console.log('Last 20 Tweets:')
-            for (i = 0; i < tweets.length; i++) {
-                var number = i + 1;
-                console.log(' ');
-                console.log([i + 1] + '. ' + tweets[i].text);
-                console.log('Created on: ' + tweets[i].created_at);
-                console.log(' ');
-                fs.appendFile('terminal.log', (number + '. Tweet: ' + tweets[i].text + '\r\nCreated at: ' + tweets[i].created_at + ' \r\n'), function(err) {
-                    if (err) throw err;
-                });
-            }
-            fs.appendFile('terminal.log', ('=============== LOG ENTRY END ===============\r\n \r\n'), function(err) {
-                if (err) throw err;
-            });
+        for (i = 0; i < tweets.length; i++) {
+            var number = i + 1;
+            console.log([i + 1] + '. ' + tweets[i].text);
+            console.log('Created on: ' + tweets[i].created_at);
         }
     });
 } // end myTweets function
@@ -107,5 +93,17 @@ function doWhatever(){
         var fileData = array[1];
         // run the main function again with the data from the file.
         // doit(fileAction,fileData);
+        spotify.search({ type: "track", query: array[1] }, function(err, results) {
+        
+        if (err) {
+            return console.log("Error occurred: " + err);
+        }
+        
+        console.log("Artist Name: "+results.tracks.items[0].artists[0].name);
+        console.log("Song Name: "+results.tracks.items[0].name);
+        console.log("Spotify URL: "+results.tracks.items[0].artists[0].external_urls.spotify);
+        console.log("Album Name: "+results.tracks.items[0].album.name);
+        
+        });
     });
 }
