@@ -1,22 +1,33 @@
-var action = process.argv[2];
-var value = process.argv[3];
-
+// It's convention to include all `require`’s at the top of 
+// files to communicate to other developers what is relied
+// upon for the module. However, if there is a good reason
+// to require a module further down (lets say for a dynamic
+// import) then it’s fine to break with convention
+var Twitter = require('twitter');
+var Spotify = require('node-spotify-api');
+var request = require('request');
+var fs = require('fs');
+// It appears your `keys.js` file was missing. You may 
+// have forgot to check them in with git. This is the 
+// prime reason your app failed to run. Everything else
+// looked good for the most part.
 var keys = require('./keys.js');
 
-var Twitter = require('twitter');
+// Similarly, instantiate your main classes/modules toward
+// the top of the file. Generally, files should read like
+// a newspaper meaning things that are relied upon by other
+// things go below the things that rely upon them
 var client = new Twitter(keys.twitterKeys);
-
-
-var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotifyKeys);
+
+var action = process.argv[2];
+var value = process.argv[3];
 
 var params = {
     screen_name: 'Getpetpal',
     count: 10
 }
 
-var request = require('request');
-var fs = require('fs');
 
 switch (action) {
     case 'my-tweets':
